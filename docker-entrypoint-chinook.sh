@@ -60,35 +60,34 @@ done
 # We need to clear these even if they don't have PG_VERSION, as PostgreSQL checks for directory existence
 if [ -d "/var/lib/postgresql" ]; then
     echo "Checking for PostgreSQL version-specific directories..." >&2
-    # Find all version directories (e.g., /var/lib/postgresql/18/docker, /var/lib/postgresql/16/data)
+    # Explicitly check for common PostgreSQL 18+ directory patterns
+    # PostgreSQL 18 uses /var/lib/postgresql/18/docker by default
+    for version in 18 17 16 15 14 13 12 11; do
+        for subdir in docker data; do
+            version_dir="/var/lib/postgresql/${version}/${subdir}"
+            if [ -d "$version_dir" ]; then
+                echo "Found PostgreSQL version directory: $version_dir" >&2
+                if [ -f "$version_dir/PG_VERSION" ]; then
+                    echo "Directory is initialized (PG_VERSION exists). Removing to force reinitialization..." >&2
+                else
+                    echo "Directory exists (even without PG_VERSION). Clearing to ensure init scripts run..." >&2
+                fi
+                # Clear the directory contents
+                find "$version_dir" -mindepth 1 -delete 2>/dev/null || {
+                    rm -rf "$version_dir"/* "$version_dir"/.[!.]* 2>/dev/null || true
+                }
+                echo "Cleared $version_dir" >&2
+            fi
+        done
+    done
+    # Also use glob patterns as fallback for any other version numbers
     for version_dir in /var/lib/postgresql/*/docker /var/lib/postgresql/*/data; do
         if [ -d "$version_dir" ]; then
-            echo "Found PostgreSQL version directory: $version_dir" >&2
-            if [ -f "$version_dir/PG_VERSION" ]; then
-                echo "Directory is initialized (PG_VERSION exists). Removing to force reinitialization..." >&2
-            else
-                echo "Directory exists (even without PG_VERSION). Clearing to ensure init scripts run..." >&2
-            fi
-            # Clear the directory contents
+            echo "Found PostgreSQL version directory (via glob): $version_dir" >&2
             find "$version_dir" -mindepth 1 -delete 2>/dev/null || {
                 rm -rf "$version_dir"/* "$version_dir"/.[!.]* 2>/dev/null || true
             }
             echo "Cleared $version_dir" >&2
-        fi
-    done
-    # Also check for any numbered version directories directly and clear their subdirectories
-    for version_num_dir in /var/lib/postgresql/[0-9]*; do
-        if [ -d "$version_num_dir" ]; then
-            echo "Found PostgreSQL version number directory: $version_num_dir" >&2
-            for subdir in "$version_num_dir"/docker "$version_num_dir"/data; do
-                if [ -d "$subdir" ]; then
-                    echo "Clearing $subdir (PostgreSQL 18+ may use this location)..." >&2
-                    find "$subdir" -mindepth 1 -delete 2>/dev/null || {
-                        rm -rf "$subdir"/* "$subdir"/.[!.]* 2>/dev/null || true
-                    }
-                    echo "Cleared $subdir" >&2
-                fi
-            done
         fi
     done
 fi
