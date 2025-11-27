@@ -1,0 +1,10 @@
+FROM postgres:16-alpine
+
+# Copy custom entrypoint script
+COPY docker-entrypoint-chinook.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint-chinook.sh
+
+# Override the default entrypoint
+ENTRYPOINT ["docker-entrypoint-chinook.sh"]
+CMD ["postgres"]
+
