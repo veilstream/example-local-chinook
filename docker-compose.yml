@@ -5,7 +5,7 @@ services:
     container_name: source-database
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: db
+      POSTGRES_DB: postgres # This is the default database name for Postgres
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
     volumes:
@@ -20,7 +20,7 @@ services:
     image: veilstream/veilstream-postgres-proxy:latest
     env_file: ./.env
     environment:
-      DATABASE_URI: postgresql://user:password@source-database:5432/chinook
+      DATABASE_URI: postgresql://user:password@source-database:5432/postgres
     ports:
       - "5435:5432"
     depends_on:
@@ -37,7 +37,7 @@ services:
       context: ./api
       dockerfile: Dockerfile
     environment:
-      DATABASE_URL: postgresql+asyncpg://user:password@source-database:5432/chinook
+      DATABASE_URL: postgresql+asyncpg://user:password@source-database:5432/postgres
     ports:
       - "8000:8000"
     depends_on:
