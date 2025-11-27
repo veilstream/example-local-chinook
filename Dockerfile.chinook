@@ -1,10 +1,4 @@
-FROM postgres:18-alpine
+# Use the latest official Postgres image
+FROM postgres:latest
 
-# Copy custom entrypoint script
-COPY docker-entrypoint-chinook.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint-chinook.sh
-
-# Override the default entrypoint
-ENTRYPOINT ["docker-entrypoint-chinook.sh"]
-CMD ["postgres"]
-
+COPY ./sample_data/*.sql /docker-entrypoint-initdb.d/
