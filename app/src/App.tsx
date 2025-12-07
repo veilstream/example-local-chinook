@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -59,4 +58,4 @@ function App() {
 export default App;
 
 
-console.log('REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
+console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);

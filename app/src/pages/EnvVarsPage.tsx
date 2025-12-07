@@ -35,16 +35,16 @@ export const EnvVarsPage: React.FC = () => {
 
   // Get frontend environment variables (build-time)
   const frontendEnvVars: Record<string, string> = {};
-  // React env vars are available via process.env, but only those prefixed with REACT_APP_
+  // Vite env vars are available via import.meta.env, but only those prefixed with VITE_
   // We'll show what's actually available
-  frontendEnvVars['REACT_APP_API_URL'] = process.env.REACT_APP_API_URL || '(not set)';
+  if (import.meta.env.VITE_API_URL) {
+    frontendEnvVars['VITE_API_URL'] = import.meta.env.VITE_API_URL;
+  } else {
+    frontendEnvVars['VITE_API_URL'] = '(not set)';
+  }
   
-  // Try to get all process.env keys that start with REACT_APP_
-  Object.keys(process.env).forEach((key) => {
-    if (key.startsWith('REACT_APP_')) {
-      frontendEnvVars[key] = process.env[key] || '(not set)';
-    }
-  });
+  // Note: In Vite, we can't easily iterate over import.meta.env at runtime
+  // Environment variables are replaced at build time, so we manually list known ones
 
   if (loading) {
     return (
@@ -81,7 +81,7 @@ export const EnvVarsPage: React.FC = () => {
                   <TableRow key={key}>
                     <TableCell>
                       <code>{key}</code>
-                      {key === 'REACT_APP_API_URL' && (
+                      {key === 'VITE_API_URL' && (
                         <Chip
                           label="Important"
                           color="primary"
@@ -109,7 +109,7 @@ export const EnvVarsPage: React.FC = () => {
       </Typography>
       <Typography variant="body1" color="text.secondary" paragraph>
         This page shows environment variables from both the frontend (build-time) and API (runtime) pods.
-        Note: React environment variables must be set at <strong>build time</strong> and are baked into the JavaScript bundle.
+        Note: Vite environment variables must be set at <strong>build time</strong> and are baked into the JavaScript bundle.
       </Typography>
 
       {error && (
