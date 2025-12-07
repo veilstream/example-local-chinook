@@ -1,5 +1,5 @@
 # Build stage
-FROM node:18-alpine as build
+FROM node:25-alpine as build
 
 # Declare build arguments for React environment variables
 ARG REACT_APP_API_URL=http://localhost:8000
