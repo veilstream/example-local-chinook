@@ -10,6 +10,7 @@ import {
   ListItemText,
   Toolbar,
   Typography,
+  useTheme,
 } from '@mui/material';
 import {
   MusicNote,
@@ -28,6 +29,11 @@ const menuItems = [
 export const Navigation: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const theme = useTheme();
+
+  // Get colors from theme
+  const primaryColor = theme.palette.primary.main;
+  const contrastText = theme.palette.primary.contrastText || '#fff';
 
   return (
     <Drawer
@@ -57,29 +63,29 @@ export const Navigation: React.FC = () => {
               cx="50"
               cy="50"
               r="45"
-              fill="#1976d2"
-              stroke="#fff"
+              fill={primaryColor}
+              stroke={contrastText}
               strokeWidth="2"
             />
             {/* Inner grooves */}
-            <circle cx="50" cy="50" r="35" fill="none" stroke="#fff" strokeWidth="1" opacity="0.3" />
-            <circle cx="50" cy="50" r="25" fill="none" stroke="#fff" strokeWidth="1" opacity="0.3" />
-            <circle cx="50" cy="50" r="15" fill="none" stroke="#fff" strokeWidth="1" opacity="0.3" />
+            <circle cx="50" cy="50" r="35" fill="none" stroke={contrastText} strokeWidth="1" opacity="0.3" />
+            <circle cx="50" cy="50" r="25" fill="none" stroke={contrastText} strokeWidth="1" opacity="0.3" />
+            <circle cx="50" cy="50" r="15" fill="none" stroke={contrastText} strokeWidth="1" opacity="0.3" />
             {/* Center hole */}
-            <circle cx="50" cy="50" r="5" fill="#fff" />
+            <circle cx="50" cy="50" r="5" fill={contrastText} />
             {/* Music notes */}
             <g transform="translate(50, 50)">
               {/* First note */}
               <g transform="translate(-20, -10)">
-                <ellipse cx="0" cy="0" rx="3" ry="5" fill="#fff" />
-                <line x1="3" y1="0" x2="3" y2="-15" stroke="#fff" strokeWidth="2" />
-                <circle cx="8" cy="-12" r="2" fill="#fff" />
+                <ellipse cx="0" cy="0" rx="3" ry="5" fill={contrastText} />
+                <line x1="3" y1="0" x2="3" y2="-15" stroke={contrastText} strokeWidth="2" />
+                <circle cx="8" cy="-12" r="2" fill={contrastText} />
               </g>
               {/* Second note */}
               <g transform="translate(15, -5)">
-                <ellipse cx="0" cy="0" rx="3" ry="5" fill="#fff" />
-                <line x1="3" y1="0" x2="3" y2="-15" stroke="#fff" strokeWidth="2" />
-                <circle cx="8" cy="-12" r="2" fill="#fff" />
+                <ellipse cx="0" cy="0" rx="3" ry="5" fill={contrastText} />
+                <line x1="3" y1="0" x2="3" y2="-15" stroke={contrastText} strokeWidth="2" />
+                <circle cx="8" cy="-12" r="2" fill={contrastText} />
               </g>
             </g>
           </Box>

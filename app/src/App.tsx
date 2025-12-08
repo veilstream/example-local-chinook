@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Box, Container } from '@mui/material';
 import { Navigation } from './components/Navigation';
@@ -9,18 +9,11 @@ import { AlbumDetailPage } from './pages/AlbumDetailPage';
 import { EnvVarsPage } from './pages/EnvVarsPage';
 import { CustomersPage } from './pages/CustomersPage';
 import { EmployeesPage } from './pages/EmployeesPage';
+import { createAppTheme, defaultTheme } from './theme';
 
-const theme = createTheme({
-  palette: {
-    mode: 'light',
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#dc004e',
-    },
-  },
-});
+// Create theme from configuration
+// In the future, this could be selected dynamically (e.g., from user preferences, URL param, etc.)
+const theme = createAppTheme(defaultTheme);
 
 function App() {
   return (
