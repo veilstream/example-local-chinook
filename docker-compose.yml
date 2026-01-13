@@ -19,6 +19,24 @@ services:
   proxy:
     container_name: proxy
     image: veilstream/veilstream-postgres-proxy:latest
+    environment:
+      DATABASE_URI: postgresql://user:password@source-database:5432/chinook
+    volumes:
+      - .proxy-data/:/veilstream/
+    ports:
+      - "5436:5432"
+      - "8683:8683"
+    depends_on:
+      source-database:
+        condition: service_healthy
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  proxy-api:
+    container_name: proxy-api
+    image: veilstream/veilstream-postgres-proxy:latest
     env_file: ./.env
     environment:
       DATABASE_URI: postgresql://user:password@source-database:5432/chinook
@@ -26,7 +44,7 @@ services:
       - .proxy-data/:/veilstream/
     ports:
       - "5435:5432"
-      - "8683:8683"
+      - "8684:8683"
     depends_on:
       source-database:
         condition: service_healthy

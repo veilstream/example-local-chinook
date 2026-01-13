@@ -7,6 +7,14 @@ CREATE USER chris WITH PASSWORD 'password';
 -- grant all privileges on all tables in public schema to alice, bob, and chris
 \c chinook;
 
+-- Ensure the veilstream schema exists and is usable by all roles.
+-- Notes:
+-- - `GRANT ... ON SCHEMA` must be run by the schema owner (or a superuser).
+-- - This init script is executed as POSTGRES_USER (`user`), so we create/own the schema here.
+CREATE SCHEMA IF NOT EXISTS veilstream AUTHORIZATION "user";
+ALTER SCHEMA veilstream OWNER TO "user";
+GRANT USAGE ON SCHEMA veilstream TO PUBLIC;
+
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO alice;
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO alice;
 GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO alice;
